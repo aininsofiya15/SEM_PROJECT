@@ -17,14 +17,14 @@ class DatabaseSeeder extends Seeder
         $team = [
             [
                 'matric_id' => 'CB23015', 
-                'name' => 'Project Lead', 
+                'name' => 'Ainin Sofiya', 
                 'email' => 'cb23015@student.umpsa.edu.my', 
                 'program' => 'Faculty of Computing', 
                 'password' => $defaultPassword
             ],
             [
                 'matric_id' => 'CB23016', 
-                'name' => 'Siti', 
+                'name' => 'Hidayah', 
                 'email' => 'siti@student.umpsa.edu.my', 
                 'program' => 'Faculty of Computing', 
                 'password' => $defaultPassword
