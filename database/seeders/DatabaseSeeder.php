@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
         Lecturer::updateOrCreate(
             ['staff_id' => 'STF001'],
             [
-                'name' => 'Dr. Admin',
+                'name' => 'Dr. Fahim',
                 'email' => 'lecturer@umpsa.edu.my',
                 'research_group' => 'Software Engineering',
                 'password' => $defaultPassword
