@@ -45,12 +45,17 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <!-- AFTER -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Program</label>
-                                <input type="text" name="program" value="{{ old('program', $student->program) }}" required
-                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200">
+                                <select name="program" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200">
+                                    <option value="Software Engineering" {{ old('program', $student->program) == 'Software Engineering' ? 'selected' : '' }}>Software Engineering (CB)</option>
+                                    <option value="Computer System & Networking" {{ old('program', $student->program) == 'Computer System & Networking' ? 'selected' : '' }}>Computer System & Networking (CA)</option>
+                                    <option value="Computer Graphics & Multimedia" {{ old('program', $student->program) == 'Computer Graphics & Multimedia' ? 'selected' : '' }}>Computer Graphics & Multimedia (CD)</option>
+                                    <option value="Cybersecurity" {{ old('program', $student->program) == 'Cybersecurity' ? 'selected' : '' }}>Cybersecurity (CF)</option>
+                                </select>
                                 @error('program')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div>
