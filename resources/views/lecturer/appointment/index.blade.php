@@ -54,29 +54,32 @@
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                             @if($appointment->status === 'approved') bg-green-100 text-green-800
                             @elseif($appointment->status === 'rejected') bg-red-100 text-red-800
-                            @elseif($appointment->status === 'completed') bg-gray-100 text-gray-800
+                            @elseif($appointment->status === 'completed') bg-gray-100 text-gray-600
                             @else bg-yellow-100 text-yellow-800 @endif">
                             {{ ucfirst($appointment->status) }}
                         </span>
                     </td>
                     <td class="px-6 py-4 text-sm font-medium">
-                        @if($appointment->status === 'pending')
-                        <button onclick="showReviewModal({{ $appointment->id }}, '{{ addslashes($appointment->title) }}')" 
-                                class="text-blue-600 hover:text-blue-900 cursor-pointer">
-                            Review
-                        </button>
-                        @elseif($appointment->status === 'approved')
-                        <button onclick="showCompleteModal({{ $appointment->id }})" 
-                                class="text-green-600 hover:text-green-900 cursor-pointer">
-                            Mark Complete
-                        </button>
-                        @endif
-                        @if($appointment->feedback)
-                        <button onclick="viewFeedback('{{ addslashes($appointment->feedback) }}')" 
-                                class="text-gray-600 hover:text-gray-900 ml-3 cursor-pointer">
-                            View Feedback
-                        </button>
-                        @endif
+                        <div class="flex items-center gap-2">
+                            @if($appointment->status === 'pending')
+                            <button onclick="showReviewModal({{ $appointment->id }}, '{{ addslashes($appointment->title) }}')" 
+                                    class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition text-center whitespace-nowrap">
+                                Review
+                            </button>
+                            @elseif($appointment->status === 'approved')
+                            <button onclick="showCompleteModal({{ $appointment->id }})" 
+                                    class="bg-green-50 text-green-700 hover:bg-green-100 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition text-center whitespace-nowrap">
+                                Mark Complete
+                            </button>
+                            @endif
+
+                            @if($appointment->feedback)
+                            <button onclick="viewFeedback('{{ addslashes($appointment->feedback) }}')" 
+                                    class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition text-center whitespace-nowrap">
+                                View Feedback
+                            </button>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @empty
@@ -91,7 +94,7 @@
     </div>
 
     <div id="reviewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" style="display: none; z-index: 9999;">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="relative top-20 mx-auto p-6 border max-w-lg w-full shadow-lg rounded-md bg-white">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-medium" id="reviewAppointmentTitle">Review Appointment</h3>
                 <button type="button" onclick="closeModal('reviewModal')" class="text-gray-600 hover:text-gray-900 text-xl font-bold">
@@ -111,13 +114,16 @@
                             <option value="rejected">Reject</option>
                         </select>
                     </div>
+                    
                     <div id="meetingLinkDiv">
-                        <label class="block text-sm font-medium text-gray-700">Meeting Link (if online)</label>
-                        {{-- FIXED: type="url" changed to type="text" to stop the browser from freezing on submit --}}
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-sm font-medium text-gray-700">Meeting Link (if online)</label>
+                        </div>
                         <input type="text" name="meeting_link" id="meetingLinkInput"
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
                                placeholder="https://meet.google.com/...">
                     </div>
+                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Feedback</label>
                         <textarea name="feedback" id="reviewFeedbackInput" rows="4" required
