@@ -118,6 +118,12 @@
                     <div id="meetingLinkDiv">
                         <div class="flex justify-between items-center mb-1">
                             <label class="block text-sm font-medium text-gray-700">Meeting Link (if online)</label>
+
+                             <button type="button" onclick="openGoogleMeet()" 
+                                    class="text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md border border-blue-200 shadow-sm transition-all duration-200 font-semibold cursor-pointer inline-flex items-center gap-1.5">
+                                🔗 Open Google Meet
+                            </button>
+
                         </div>
                         <input type="text" name="meeting_link" id="meetingLinkInput"
                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
@@ -199,6 +205,15 @@
 </div>
 
 <script>
+
+function openGoogleMeet() {
+    window.open(
+        'https://meet.google.com/', 
+        'GoogleMeetPopup', 
+        'width=950,height=650,scrollbars=yes,resizable=yes'
+    );
+}
+
 function showReviewModal(appointmentId, title) {
     console.log("Review triggered for layout entry ID: " + appointmentId);
     
