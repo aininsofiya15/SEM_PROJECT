@@ -115,8 +115,20 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Research Area</label>
-                        <input type="text" name="research_area" required
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200">
+                        <select name="research_area" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 
+                        focus:ring focus:ring-blue-200 px-3 py-2">
+
+                        <option value="" selected disabled>Select Research Area</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="Networking">Networking</option>
+                        <option value="Cyber Security">Cyber Security</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        <option value="Data Science">Data Science</option>
+
+                            </select>
+
+                            </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Supervisor</label>
