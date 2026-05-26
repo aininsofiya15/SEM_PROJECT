@@ -21,7 +21,7 @@ class Appointment extends Model
 
     protected $casts = [
         'date' => 'date',
-        'time' => 'datetime'
+        // FIXED: Removed the 'time' => 'datetime' cast to prevent database update blocks
     ];
 
     public function student()
@@ -33,4 +33,4 @@ class Appointment extends Model
     {
         return $this->belongsTo(Lecturer::class);
     }
-} 
+}

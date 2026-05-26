@@ -19,14 +19,14 @@ class DatabaseSeeder extends Seeder
         $team = [
             [
                 'matric_id' => 'CB23015', 
-                'name' => 'Project Lead', 
+                'name' => 'Ainin Sofiya', 
                 'email' => 'cb23015@student.umpsa.edu.my', 
                 'program' => 'Faculty of Computing', 
                 'password' => $defaultPassword
             ],
             [
                 'matric_id' => 'CB23016', 
-                'name' => 'Siti', 
+                'name' => 'Hidayah', 
                 'email' => 'siti@student.umpsa.edu.my', 
                 'program' => 'Faculty of Computing', 
                 'password' => $defaultPassword
@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
         Lecturer::updateOrCreate(
             ['staff_id' => 'STF001'],
             [
-                'name' => 'Dr. Admin',
+                'name' => 'Dr. Fahim',
                 'email' => 'lecturer@umpsa.edu.my',
                 'research_group' => 'Software Engineering',
                 'password' => $defaultPassword
