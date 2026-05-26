@@ -13,6 +13,34 @@
         </button>
     </div>
 
+    @if(session('overlap_warning'))
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 shadow-md" role="alert">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="font-bold">⚠️ Warning: Overlap Detected</p>
+                <p>{{ session('overlap_warning') }}</p>
+            </div>
+            
+            <form action="{{ route('coordinator.timeframe.store') }}" method="POST">
+                @csrf
+                {{-- Automatically re-pass all the data from the previous attempt --}}
+                @foreach(old() as $key => $value)
+                    @if(!in_array($key, ['_token', 'force_save']))
+                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                    @endif
+                @endforeach
+                
+                {{-- This hidden input tells the controller to skip the overlap check --}}
+                <input type="hidden" name="force_save" value="1">
+                
+                <button type="submit" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-4 transition">
+                    Yes, Save Anyway
+                </button>
+            </form>
+        </div>
+    </div>
+    @endif
+
     @if(session('success'))
     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
         {{ session('success') }}
