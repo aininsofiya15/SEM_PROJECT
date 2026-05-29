@@ -17,14 +17,14 @@ class DatabaseSeeder extends Seeder
         $team = [
             [
                 'matric_id' => 'CB23015', 
-                'name' => 'Project Lead', 
-                'email' => 'cb23015@student.umpsa.edu.my', 
+                'name' => 'Ainin', 
+                'email' => 'ainin@student.umpsa.edu.my', 
                 'program' => 'Bachelor of Computer Science (Software Engineering) with Honours', 
                 'password' => $defaultPassword
             ],
             [
                 'matric_id' => 'CB23016', 
-                'name' => 'Siti', 
+                'name' => 'Hidayah', 
                 'email' => 'siti@student.umpsa.edu.my', 
                 'program' => 'Bachelor of Computer Science (Software Engineering) with Honours', 
                 'password' => $defaultPassword
@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        // 2. Map 6 Names Per Program 
+        // 2. Map 6 Student Names Per Program 
         $programData = [
             'Bachelor of Computer Science (Software Engineering) with Honours' => [
                 'code' => 'CB', 'start' => 100,
