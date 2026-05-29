@@ -20,20 +20,20 @@ class LecturerAppointmentController extends Controller
         return view('lecturer.appointment.index', compact('appointments'));
     }
 
-    public function update(Request $request, Appointment $appointment)
-    {
-        $request->validate([
-            'status' => 'required|in:approved,rejected,completed',
-            'feedback' => 'nullable|string',
-            'meeting_link' => 'nullable|url|required_if:status,approved'
-        ]);
+      public function update(Request $request, Appointment $appointment)
+{
+    $request->validate([
+        'status' => 'required|in:approved,rejected,completed',
+        'feedback' => 'nullable|string',
+        'meeting_link' => 'nullable|string' // Enforces loose string format for links
+    ]);
 
-        $appointment->update([
-            'status' => $request->status,
-            'feedback' => $request->feedback,
-            'meeting_link' => $request->meeting_link
-        ]);
+    $appointment->update([
+        'status' => $request->status,
+        'feedback' => $request->feedback,
+        'meeting_link' => $request->meeting_link
+    ]);
 
-        return back()->with('success', 'Appointment ' . $request->status . ' successfully.');
-    }
+    return back()->with('success', 'Appointment review updated successfully.');
+}
 } 

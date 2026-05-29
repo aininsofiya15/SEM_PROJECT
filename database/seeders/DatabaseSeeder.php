@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
     {
         $defaultPassword = Hash::make('password');
 
+        
+
         // 1. Generate the Student Team Accounts
         $team = [
             [

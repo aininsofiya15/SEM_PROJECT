@@ -14,7 +14,6 @@
     </div>
     @endif
 
-    <!-- Appointments List -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <table class="min-w-full">
             <thead class="bg-gray-50">
@@ -39,7 +38,7 @@
                         <div class="text-sm text-gray-500">{{ Str::limit($appointment->description, 50) }}</div>
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500">
-                        {{ $appointment->date->format('d M Y') }}<br>
+                        {{ \Carbon\Carbon::parse($appointment->date)->format('d M Y') }}<br>
                         {{ \Carbon\Carbon::parse($appointment->time)->format('h:i A') }}
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500">
@@ -55,29 +54,32 @@
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                             @if($appointment->status === 'approved') bg-green-100 text-green-800
                             @elseif($appointment->status === 'rejected') bg-red-100 text-red-800
-                            @elseif($appointment->status === 'completed') bg-gray-100 text-gray-800
+                            @elseif($appointment->status === 'completed') bg-gray-100 text-gray-600
                             @else bg-yellow-100 text-yellow-800 @endif">
                             {{ ucfirst($appointment->status) }}
                         </span>
                     </td>
                     <td class="px-6 py-4 text-sm font-medium">
-                        @if($appointment->status === 'pending')
-                        <button onclick="showReviewModal({{ $appointment->id }}, '{{ $appointment->title }}')" 
-                                class="text-blue-600 hover:text-blue-900">
-                            Review
-                        </button>
-                        @elseif($appointment->status === 'approved')
-                        <button onclick="showCompleteModal({{ $appointment->id }})" 
-                                class="text-green-600 hover:text-green-900">
-                            Mark Complete
-                        </button>
-                        @endif
-                        @if($appointment->feedback)
-                        <button onclick="viewFeedback('{{ $appointment->feedback }}')" 
-                                class="text-gray-600 hover:text-gray-900 ml-3">
-                            View Feedback
-                        </button>
-                        @endif
+                        <div class="flex items-center gap-2">
+                            @if($appointment->status === 'pending')
+                            <button onclick="showReviewModal({{ $appointment->id }}, '{{ addslashes($appointment->title) }}')" 
+                                    class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition text-center whitespace-nowrap">
+                                Review
+                            </button>
+                            @elseif($appointment->status === 'approved')
+                            <button onclick="showCompleteModal({{ $appointment->id }})" 
+                                    class="bg-green-50 text-green-700 hover:bg-green-100 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition text-center whitespace-nowrap">
+                                Mark Complete
+                            </button>
+                            @endif
+
+                            @if($appointment->feedback)
+                            <button onclick="viewFeedback('{{ addslashes($appointment->feedback) }}')" 
+                                    class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition text-center whitespace-nowrap">
+                                View Feedback
+                            </button>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @empty
@@ -91,17 +93,16 @@
         </table>
     </div>
 
-    <!-- Review Modal -->
-    <div id="reviewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div id="reviewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" style="display: none; z-index: 9999;">
+        <div class="relative top-20 mx-auto p-6 border max-w-lg w-full shadow-lg rounded-md bg-white">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium" id="reviewAppointmentTitle"></h3>
-                <button onclick="document.getElementById('reviewModal').classList.add('hidden')"
-                        class="text-gray-600 hover:text-gray-900">
-                    <i class="fas fa-times"></i>
+                <h3 class="text-lg font-medium" id="reviewAppointmentTitle">Review Appointment</h3>
+                <button type="button" onclick="closeModal('reviewModal')" class="text-gray-600 hover:text-gray-900 text-xl font-bold">
+                    ✕
                 </button>
             </div>
-            <form id="reviewForm" method="POST">
+            
+            <form id="reviewForm" method="POST" action="/lecturer/appointments">
                 @csrf
                 @method('PUT')
                 <div class="space-y-4">
@@ -113,27 +114,36 @@
                             <option value="rejected">Reject</option>
                         </select>
                     </div>
+                    
                     <div id="meetingLinkDiv">
-                        <label class="block text-sm font-medium text-gray-700">Meeting Link (if online)</label>
-                        <input type="url" name="meeting_link"
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-sm font-medium text-gray-700">Meeting Link (if online)</label>
+
+                             <button type="button" onclick="openGoogleMeet()" 
+                                    class="text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md border border-blue-200 shadow-sm transition-all duration-200 font-semibold cursor-pointer inline-flex items-center gap-1.5">
+                                🔗 Open Google Meet
+                            </button>
+
+                        </div>
+                        <input type="text" name="meeting_link" id="meetingLinkInput"
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
                                placeholder="https://meet.google.com/...">
                     </div>
+                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Feedback</label>
-                        <textarea name="feedback" rows="4" required
+                        <textarea name="feedback" id="reviewFeedbackInput" rows="4" required
                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
                                   placeholder="Provide feedback to the student..."></textarea>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-end space-x-3">
-                    <button type="button"
-                            onclick="document.getElementById('reviewModal').classList.add('hidden')"
-                            class="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-50">
+                    <button type="button" onclick="closeModal('reviewModal')"
+                            class="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-50 cursor-pointer">
                         Cancel
                     </button>
                     <button type="submit"
-                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 cursor-pointer">
                         Submit Review
                     </button>
                 </div>
@@ -141,17 +151,15 @@
         </div>
     </div>
 
-    <!-- Complete Modal -->
-    <div id="completeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+    <div id="completeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" style="display: none; z-index: 9999;">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-medium">Complete Appointment</h3>
-                <button onclick="document.getElementById('completeModal').classList.add('hidden')"
-                        class="text-gray-600 hover:text-gray-900">
-                    <i class="fas fa-times"></i>
+                <button type="button" onclick="closeModal('completeModal')" class="text-gray-600 hover:text-gray-900 text-xl font-bold">
+                    ✕
                 </button>
             </div>
-            <form id="completeForm" method="POST">
+            <form id="completeForm" method="POST" action="/lecturer/appointments">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="status" value="completed">
@@ -164,13 +172,12 @@
                     </div>
                 </div>
                 <div class="mt-6 flex justify-end space-x-3">
-                    <button type="button"
-                            onclick="document.getElementById('completeModal').classList.add('hidden')"
-                            class="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-50">
+                    <button type="button" onclick="closeModal('completeModal')"
+                            class="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-50 cursor-pointer">
                         Cancel
                     </button>
                     <button type="submit"
-                            class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+                            class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 cursor-pointer">
                         Mark as Complete
                     </button>
                 </div>
@@ -178,20 +185,18 @@
         </div>
     </div>
 
-    <!-- Feedback Modal -->
-    <div id="feedbackModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+    <div id="feedbackModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" style="display: none; z-index: 9999;">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-medium">Feedback</h3>
-                <button onclick="document.getElementById('feedbackModal').classList.add('hidden')"
-                        class="text-gray-600 hover:text-gray-900">
-                    <i class="fas fa-times"></i>
+                <button type="button" onclick="closeModal('feedbackModal')" class="text-gray-600 hover:text-gray-900 text-xl font-bold">
+                    ✕
                 </button>
             </div>
-            <div id="feedbackContent" class="text-gray-600"></div>
+            <div id="feedbackContent" class="text-gray-600 whitespace-pre-wrap"></div>
             <div class="mt-6 flex justify-end">
-                <button onclick="document.getElementById('feedbackModal').classList.add('hidden')"
-                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
+                <button type="button" onclick="closeModal('feedbackModal')"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 cursor-pointer">
                     Close
                 </button>
             </div>
@@ -199,29 +204,53 @@
     </div>
 </div>
 
-@push('scripts')
 <script>
+
+function openGoogleMeet() {
+    window.open(
+        'https://meet.google.com/', 
+        'GoogleMeetPopup', 
+        'width=950,height=650,scrollbars=yes,resizable=yes'
+    );
+}
+
 function showReviewModal(appointmentId, title) {
-    document.getElementById('reviewAppointmentTitle').textContent = title;
-    document.getElementById('reviewForm').action = `/lecturer/appointments/${appointmentId}`;
-    document.getElementById('reviewModal').classList.remove('hidden');
+    console.log("Review triggered for layout entry ID: " + appointmentId);
+    
+    document.getElementById('reviewAppointmentTitle').textContent = "Review: " + title;
+    
+    const targetUrl = window.location.origin + "/lecturer/appointments/" + appointmentId;
+    document.getElementById('reviewForm').action = targetUrl;
+    
+    console.log("Form destination enforced to: " + targetUrl);
+    document.getElementById('reviewModal').style.display = 'block';
 }
 
 function showCompleteModal(appointmentId) {
-    document.getElementById('completeForm').action = `/lecturer/appointments/${appointmentId}`;
-    document.getElementById('completeModal').classList.remove('hidden');
+    const targetUrl = window.location.origin + "/lecturer/appointments/" + appointmentId;
+    document.getElementById('completeForm').action = targetUrl;
+    document.getElementById('completeModal').style.display = 'block';
 }
 
 function viewFeedback(feedback) {
     document.getElementById('feedbackContent').textContent = feedback;
-    document.getElementById('feedbackModal').classList.remove('hidden');
+    document.getElementById('feedbackModal').style.display = 'block';
 }
 
-// Show/hide meeting link field based on status
-document.getElementById('appointmentStatus').addEventListener('change', function() {
-    const meetingLinkDiv = document.getElementById('meetingLinkDiv');
-    meetingLinkDiv.style.display = this.value === 'approved' ? 'block' : 'none';
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const statusSelect = document.getElementById('appointmentStatus');
+    if(statusSelect) {
+        statusSelect.addEventListener('change', function() {
+            const meetingLinkDiv = document.getElementById('meetingLinkDiv');
+            if(meetingLinkDiv) {
+                meetingLinkDiv.style.display = this.value === 'approved' ? 'block' : 'none';
+            }
+        });
+    }
 });
 </script>
-@endpush
-@endsection 
+@endsection
