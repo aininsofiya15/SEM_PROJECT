@@ -22,7 +22,12 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email,' . $student->id,
-            'program' => 'required|string|max:255',
+            'program' => 'required|in:' . implode(',', [
+                'Bachelor of Computer Science (Software Engineering) with Honours',
+                'Bachelor of Computer Science (Computer Systems & Networking) with Honours',
+                'Bachelor of Computer Science (Computer Graphics & Multimedia) with Honours',
+                'Bachelor of Computer Science (Cybersecurity) with Honours',
+            ]),
             'current_password' => 'required_with:new_password',
             'new_password' => 'nullable|min:8|confirmed',
         ]);
