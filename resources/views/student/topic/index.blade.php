@@ -125,6 +125,8 @@
                         <option value="Cyber Security">Cyber Security</option>
                         <option value="Artificial Intelligence">Artificial Intelligence</option>
                         <option value="Data Science">Data Science</option>
+                        <option value="Cloud Computing">Cloud Computing</option>
+                        <option value="Internet of Things (IoT)">Internet of Things (IoT)</option>
 
                             </select>
 
