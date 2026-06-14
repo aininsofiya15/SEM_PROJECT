@@ -40,12 +40,26 @@ class TimeframeController extends Controller
         try {
             // Check for overlapping tasks
             $existingTask = Task::where(function($query) use ($request) {
-                $query->whereBetween('start_date', [$request->start_date, $request->end_date])
-                      ->orWhereBetween('end_date', [$request->start_date, $request->end_date]);
-            })->first();
+                // MAINTENANCE FIX: Use Interval Intersection formula to catch ALL overlap types
+                $query->where('start_date', '<', $request->end_date)
+                    ->where('end_date', '>', $request->start_date);     
+            })
+            // MAINTENANCE FIX: Only block if the overlap targets the same audience group
+                ->where(function($query) use ($request) {
+                    if ($request->boolean('for_student')) {
+                        $query->orWhere('for_student', 1);
+                    }
+                    if ($request->boolean('for_lecturer')) {
+                        $query->orWhere('for_lecturer', 1);
+                    }
+                })->first();
 
-            if ($existingTask) {
-                return back()->with('error', 'Task duration overlaps with existing task: ' . $existingTask->name);
+            // MAINTENANCE FIX: The "Reminder" Logic
+            // If overlap exists AND user hasn't clicked "Save Anyway" yet
+            if ($existingTask && !$request->has('force_save')) {
+                return back()
+                    ->withInput() // This keeps your form data filled
+                    ->with('overlap_warning', "The dates overlap with existing task: '{$existingTask->name}'. Do you want to proceed anyway?");
             }
 
             Task::create($request->all());
