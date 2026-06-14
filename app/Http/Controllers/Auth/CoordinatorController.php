@@ -46,12 +46,16 @@ class CoordinatorController extends Controller
         $totalStudents = Student::count();
         $totalLecturers = Lecturer::count();
 
-        // Get student distribution data
+        // FIX: Match array counting query parameters to the explicit long strings
         $studentDistribution = [
-            'Software Engineering' => Student::where('program', 'Software Engineering')->count(),
-            'Computer System & Networking' => Student::where('program', 'Computer System & Networking')->count(),
-            'Computer Graphics & Multimedia' => Student::where('program', 'Computer Graphics & Multimedia')->count(),
-            'Cybersecurity' => Student::where('program', 'Cybersecurity')->count()
+            'Bachelor of Computer Science (Software Engineering) with Honours' => 
+                Student::where('program', 'Bachelor of Computer Science (Software Engineering) with Honours')->count(),
+            'Bachelor of Computer Science (Computer Systems & Networking) with Honours' => 
+                Student::where('program', 'Bachelor of Computer Science (Computer Systems & Networking) with Honours')->count(),
+            'Bachelor of Computer Science (Computer Graphics & Multimedia) with Honours' => 
+                Student::where('program', 'Bachelor of Computer Science (Computer Graphics & Multimedia) with Honours')->count(),
+            'Bachelor of Computer Science (Cybersecurity) with Honours' => 
+                Student::where('program', 'Bachelor of Computer Science (Cybersecurity) with Honours')->count()
         ];
 
         $researchGroups = [
@@ -131,4 +135,4 @@ class CoordinatorController extends Controller
 
         return view('coordinator.dashboard', compact('totalStudents', 'totalLecturers', 'studentDistribution', 'researchGroups'));
     }
-} 
+}

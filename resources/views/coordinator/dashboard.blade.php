@@ -78,22 +78,23 @@
 <!-- Initialize Charts -->
 <script>
     // Program Distribution Chart
+    // Program Distribution Chart
     const programCtx = document.getElementById('programChart').getContext('2d');
     new Chart(programCtx, {
         type: 'pie',
         data: {
             labels: [
-                'Software Engineering (CB)',
-                'Computer System & Networking (CA)',
-                'Computer Graphics & Multimedia (CD)',
-                'Cybersecurity (CF)'
+                'Bachelor of Computer Science (Software Engineering) with Honours (CB)',
+                'Bachelor of Computer Science (Computer Systems & Networking) with Honours (CA)',
+                'Bachelor of Computer Science (Computer Graphics & Multimedia) with Honours (CD)',
+                'Bachelor of Computer Science (Cybersecurity) with Honours (CF)'
             ],
             datasets: [{
                 data: [
-                    {{ $studentDistribution['Software Engineering'] }},
-                    {{ $studentDistribution['Computer System & Networking'] }},
-                    {{ $studentDistribution['Computer Graphics & Multimedia'] }},
-                    {{ $studentDistribution['Cybersecurity'] }}
+                    {{ $studentDistribution['Bachelor of Computer Science (Software Engineering) with Honours'] ?? 0 }},
+                    {{ $studentDistribution['Bachelor of Computer Science (Computer Systems & Networking) with Honours'] ?? 0 }},
+                    {{ $studentDistribution['Bachelor of Computer Science (Computer Graphics & Multimedia) with Honours'] ?? 0 }},
+                    {{ $studentDistribution['Bachelor of Computer Science (Cybersecurity) with Honours'] ?? 0 }}
                 ],
                 backgroundColor: [
                     '#2193b0',
@@ -108,7 +109,14 @@
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 15,
+                        padding: 15,
+                        font: {
+                            size: 11
+                        }
+                    }
                 }
             }
         }
