@@ -45,21 +45,12 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <!-- AFTER -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Program</label>
-                                <select name="program" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200">
-                                    <option value="Bachelor of Computer Science (Software Engineering) with Honours" {{ old('program', $student->program) 
-                                        == 'Bachelor of Computer Science (Software Engineering) with Honours' ? 'selected' : '' }}>Bachelor of Computer Science (Software Engineering) with Honours</option>
-                                    <option value="Bachelor of Computer Science (Computer Systems & Networking) with Honours" {{ old('program', $student->program) 
-                                        == 'Bachelor of Computer Science (Computer Systems & Networking) with Honours' ? 'selected' : '' }}>Bachelor of Computer Science (Computer Systems & Networking) with Honours</option>
-                                    <option value="Bachelor of Computer Science (Computer Graphics & Multimedia) with Honours" {{ old('program', $student->program) 
-                                        == 'Bachelor of Computer Science (Computer Graphics & Multimedia) with Honours' ? 'selected' : '' }}>Bachelor of Computer Science (Computer Graphics & Multimedia) with Honours</option>
-                                    <option value="Bachelor of Computer Science (Cybersecurity) with Honours" {{ old('program', $student->program) 
-                                        == 'Bachelor of Computer Science (Cybersecurity) with Honours' ? 'selected' : '' }}>Bachelor of Computer Science (Cybersecurity) with Honours</option>
-                                </select>
+                                <input type="text" name="program" value="{{ old('program', $student->program) }}" required
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200">
                                 @error('program')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div>
